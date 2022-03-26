@@ -37,7 +37,7 @@ const unsigned int FieldNum = 2;                           // changer FieldNum e
 
 const String host            = "api.thingspeak.com";       // "api.thingspeak.com" "3.213.58.187" "34.231.233.177"
 const char* apiKey           = ME_APIKEY;                  // My API key @ thingspeak.com
-const unsigned long ChanNum  = ME_CHANEL;                  // My channel numeber @ thngspeak.com
+const unsigned long ChanNum  = ME_CHANEL;                  // My channel numeber @ thingspeak.com
 
 #define TXD2 21             // série capteur TX
 #define RXD2 22             // série capteur RX
