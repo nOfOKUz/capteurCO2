@@ -10,11 +10,9 @@
 #include <WiFi.h>
 #include <esp_wifi.h>    // ajout de ESP32_WPA2.ino (wpa2 error tests)
 #include <esp_wpa2.h>
-#include <WiFiClient.h> 
-
+#include <WiFiClient.h>
 #define TS_ENABLE_SSL   // see thingspeak-arduino @ github
 #include <ThingSpeak.h>
-
 #include "secret.h"     // contain all personal data in same directory
 
 WiFiMulti wifiMulti;
@@ -23,9 +21,26 @@ TFT_eSPI tft = TFT_eSPI(135, 240);
 /************************************************
      Paramètres utilisateur
  ***********************************************/
+ 
+// Thingspeak user parameters
 
-#define TXD2 21         // série capteur TX
-#define RXD2 22         // série capteur RX
+// field1 --> black sensor
+// field2 --> white sensor
+// filed3 --> gold sensor
+// filed4 --> orange sensor
+// filed5 --> silver sensor
+// filed6 --> grey sensor
+
+const char* HostName        = "Detecteur CO2 white";       // changer HostName en fonction du détecteur
+String field                = "field2";                    // changer field en fonction du détecteur
+const unsigned int FieldNum = 2;                           // changer field en fonction du détecteur
+
+const String host            = "api.thingspeak.com";       // "api.thingspeak.com" "3.213.58.187" "34.231.233.177"
+const char* apiKey           = ME_APIKEY;                  // My API key @ thingspeak.com
+const unsigned long ChanNum  = ME_CHANEL;                  // My channel numeber @ thngspeak.com
+
+#define TXD2 21             // série capteur TX
+#define RXD2 22             // série capteur RX
 #define BOUTON_CAL 35
 #define DEBOUNCE_TIME 1000
 #define MESURE_TIME 5000    // 5 secondes avant la prochaine mesure
@@ -165,7 +180,7 @@ const char * client_key = "-----BEGIN RSA PRIVATE KEY-----\n"
 "u0/dDt0eYpZpzrFqxlP+0oXxlegD8REMVvwNCy+4isyCvjogDaYRfJqi\n"
 "-----END RSA PRIVATE KEY-----";
      
-// Wifi résidentiel et user parameters @thngspeak
+// Wifi résidentiel
 const char* ssid1     = SSID_RES1;
 const char* password1 = PWD_RES1;
 const char* ssid2     = SSID_RES2;
@@ -174,22 +189,6 @@ const char* ssid3     = SSID_RES3;
 const char* password3 = PWD_RES3;
 const char* ssid4     = SSID_RES4;
 const char* password4 = PWD_RES4;
-
-const char* HostName  = "Detecteur CO2 white";        // changer HostName en fonction du détecteur
-
-// Thingspeak parameters
-const String host     = "api.thingspeak.com";        // "api.thingspeak.com" "3.213.58.187" "34.231.233.177"
-const char* apiKey    = ME_APIKEY;                   // My API key @ thingspeak.com
-String field    = "field2";                          // changer field en fonction du détecteur
-const unsigned int FieldNum = 2;                     // changer field en fonction du détecteur
-const unsigned long ChanNum = ME_CHANEL;             // My channel numeber @ thngspeak.com
-
-// field1 --> black sensor
-// field2 --> white sensor
-// filed3 --> gold sensor
-// filed4 --> orange sensor
-// filed5 --> silver sensor
-// filed6 --> grey sensor
 
 // certificat HTTPS pour envoi à thingspeak
 // DigiCert High Assurance EV Root CA
