@@ -33,7 +33,7 @@ TFT_eSPI tft = TFT_eSPI(135, 240);
 
 const char* HostName        = "Detecteur CO2 white";       // changer HostName en fonction du détecteur
 String field                = "field2";                    // changer field en fonction du détecteur
-const unsigned int FieldNum = 2;                           // changer field en fonction du détecteur
+const unsigned int FieldNum = 2;                           // changer FieldNum en fonction du détecteur
 
 const String host            = "api.thingspeak.com";       // "api.thingspeak.com" "3.213.58.187" "34.231.233.177"
 const char* apiKey           = ME_APIKEY;                  // My API key @ thingspeak.com
