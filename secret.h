@@ -1,10 +1,10 @@
-#define EMAIL_PRO 	  	  "you@your_provider.something"
-#define EMAIL_ANONI 		  "anonymous@your_provider.something"
+#define EMAIL_PRO 	  	  "you@your_enterprise.something"
+#define EMAIL_ANONI 		  "anonymous@your_enterprise.something"
 #define ME_USER			  "your_login"
 #define ME_PWD			  "your_password"
 #define SSID_PRO		  "your_wpa2_ent_ssid"
-#define NTP_PRO		 	  "ntp.your_provider.something"
-#define PROXY1_PRO		  "your_firt_proxy_adresse"
+#define NTP_PRO		 	  "ntp.your_enterprise.something"
+#define PROXY1_PRO		  "your_first_proxy_adresse"
 #define PROXY2_PRO	  	  "your_second_proxy_adresse"
 #define PROXY_PORT_PRO 		   8080 // or other port number
 
