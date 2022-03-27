@@ -11,7 +11,7 @@
 #include <esp_wifi.h>    // ajout de ESP32_WPA2.ino (wpa2 error tests)
 #include <esp_wpa2.h>
 #include <WiFiClient.h>
-#define TS_ENABLE_SSL   // see thingspeak-arduino @ github
+#define TS_ENABLE_SSL   // see thingspeak-arduino @ github (to keep before include library)
 #include <ThingSpeak.h>
 #include "secret.h"     // contain all personal data in same directory
 
@@ -220,10 +220,10 @@ const char* rootCACertificate =
 // variables globales du programme pricipal
 unsigned long lastTime = 0;
 unsigned long timerDelay = 10000;  // valeur initiale de 10s (puis SENDING_TIME)
-bool WifiAvailable = false;
-bool ARsend = true;
-bool Pro = false;
-int ARsendNum = 0;
+bool WifiAvailable = false;        // Wifi dipo ou offline mode
+bool ARsend = true;                // accusé de réception si envoi OK
+bool Pro = false;                  // mode wifi pro entreprise ou residenteil
+int ARsendNum = 0;                 // nombre d'envois ratés
 
 
 // gestion de l'horloge pour la validation des certificats HTTPS
@@ -367,7 +367,7 @@ void prepareEcran() {
   tft.setTextSize(8);
 }
 
-// ## nouvelles fonctions ##
+// ## nouvelles fonctions by nOfOkUz ##
 
 // nouvelle valeur
 unsigned long Nouvelle_Valeur()
@@ -382,14 +382,14 @@ unsigned long Nouvelle_Valeur()
 
 // envoi de la valeur
 void Envoi_Valeur(unsigned long CO2_send) {
-      if ( !WifiAvailable ) {
+      if ( !WifiAvailable ) { // Pas de WiFi mode offline
           Serial.println(F("Off line"));
           return;
           }
       if ( !ARsend ) {
           ARsendNum++ ;
           Serial.print(F("Valeur précédente non envoyée : ") );
-          if ( ARsendNum >3 ) {
+          if ( ARsendNum >3 ) { // rebot après 3 essais ratés
              Serial.println(F(" ... reboot dans 5s...") );
              delay(5000);
              ESP.restart();
@@ -398,7 +398,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
              Serial.println(String( ARsendNum )+ F(" fois.") );
           }
       }
-      if ( Pro ) {
+      if ( Pro ) { // Envoi en WiFi pro entreprise avec wpa2 et par un proxy
          if ( (WiFi.status() == WL_CONNECTED ) ) {   
            WiFiClient client;
            Serial.print(F("### Connexion au proxy "));
@@ -441,7 +441,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
          }
       return;
       }
-      if( !Pro ) {
+      if( !Pro ) { // envoi par Wifi résidentiel
           if ((wifiMulti.run() == WL_CONNECTED)) {
               WiFiClientSecure client;
               client.setCACert(rootCACertificate);
@@ -463,7 +463,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
               ARsend = false ;
               }
               return;
-              // without ThinkSpeak library              
+              // without ThinkSpeak library (need to remove previous and return          
               Serial.print(F("### Connexion web à "));
               Serial.print(host);
               if (!client.connect(host.c_str(), 443)) {
@@ -494,7 +494,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
           else {
               Serial.println(F("Valeur non envoyée"));
               Serial.print(F("Plus connecté au WiFi "));
-              if ( !ARsend ) {
+              if ( !ARsend ) { // reboot si non reconnexion au WiFi 2 fois de suite
                   Serial.println(F("... reboot dans 5s..."));
                   delay(5000);
                   ESP.restart();
@@ -633,6 +633,7 @@ void setup() {
               Serial.println(F("Failed to enable WPA2"));
               } else { Serial.println(F("ESP_OK WPA2 enable"));}
 
+// useless part for me kept for memory
 //            Serial.print(F("ESP WiFi connecting : "));
 //            error = esp_wifi_connect();                         // ajout de ESP32_WPA2.ino (tous les tests)    
 //            if ( error == ESP_OK ) {
@@ -770,11 +771,11 @@ void loop() {
 
   // envoi de la valeur sur le cloud tous les timerDelay
   if ((millis() - lastTime) > timerDelay) {
-    Serial.println();
+    Serial.println();  // rend plus lisible le debug
     Envoi_Valeur(CO2);  
     }
 
   ancienCO2 = CO2;
-  Serial.println();
+  Serial.println();   // rend plus lisible le debug
   delay(MESURE_TIME); // attend MESURE_TIME ms avant la prochaine mesure
 }
