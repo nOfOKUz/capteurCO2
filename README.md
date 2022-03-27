@@ -15,4 +15,6 @@ Also added mecanisism :
     to reboot if nothing uploads more than 3 times
   
     in residential Wifi sending sub routine, you can find both Thingspeak sending value with library or without
+    
+https://github.com/mathworks/thingspeak-arduino
   
