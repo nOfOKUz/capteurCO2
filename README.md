@@ -7,8 +7,11 @@ A few lines are useless for now, but could be use for Eduroam in near futur...
 There are also a lot of debug lines via serial print...
 
 Also added mecanisism :
-  to avoid dropped value for too long when update on Thingspeak is invalid  
+  to avoid dropped value for too long when update on Thingspeak is invalid
+  
   to reconnect to wifi if connection lost
+  
   to reboot if nothings uploads more than 3 times
+  
   in residential Wifi sending sub routine, you can find both Thingspeak sending value with library or without
   
