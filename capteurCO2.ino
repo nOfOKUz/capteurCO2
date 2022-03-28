@@ -390,7 +390,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
           ARsendNum++ ;
           Serial.print(F("Valeur précédente non envoyée : ") );
           if ( ARsendNum >3 ) { // rebot après 3 essais ratés
-             Serial.println(F(" ... reboot dans 5s...") );
+             Serial.println(F("... reboot dans 5s...") );
              delay(5000);
              ESP.restart();
           }
@@ -403,10 +403,31 @@ void Envoi_Valeur(unsigned long CO2_send) {
            WiFiClient client;
            Serial.print(F("### Connexion au proxy "));
            if ( !client.connect( proxy_name , proxy_port ) ) {
-               Serial.println(F(" ..... echec de la connexion web, valeur non envoyée!"));
+               Serial.println(F("... echec de la connexion web, valeur non envoyée!"));
                ARsend = false ;
            }
            else {
+            
+//               // with ThinkSpeak library ! not working with proxy http error code : -301 ?
+//               Serial.print(F("... connexion web à ThingSpeak via library "));            
+//               ThingSpeak.begin(client);  
+//               int result = ThingSpeak.writeField( ChanNum , FieldNum , long(CO2_send) , apiKey );
+//               if (result == 200) {
+//                   Serial.print(F("... et envoi de la valeur : "));
+//                   Serial.print(CO2_send);
+//                   Serial.println(F(" ppm ###"));
+//                   lastTime = millis();
+//                   timerDelay = SENDING_TIME; // attendra SENDING_TIME ms avant le prochain envoi
+//                   ARsend = true ;
+//                   ARsendNum = 0 ;
+//               } 
+//               else {
+//                  Serial.println("... problem updating channel, http error code : " + String(result));
+//                  ARsend = false ;
+//               }
+//               return;
+
+               // without ThinkSpeak library (need to remove previous and return)
                Serial.print(F(" et envoi de la valeur "));
                Serial.print(CO2_send);
                Serial.println(F(" ppm ###"));
@@ -428,8 +449,8 @@ void Envoi_Valeur(unsigned long CO2_send) {
            Serial.println(F("######################### fin fonction envoi ##########################"));
            } 
          else {
-             Serial.println(F("Valeur non envoyée via proxy"));
-             Serial.print(F("Plus connecté au WiFi "));
+             Serial.println(F("Valeur non envoyée via proxy "));
+             Serial.print(F("... plus connecté au WiFi "));
              if ( !ARsend ) {
                   Serial.println(F("... reboot dans 5s..."));
                   delay(5000);
@@ -450,7 +471,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
               ThingSpeak.begin(client);  
               int result = ThingSpeak.writeField( ChanNum , FieldNum , long(CO2_send) , apiKey );
               if (result == 200) {
-                  Serial.print(F(" ... et envoi de la valeur : "));
+                  Serial.print(F("... et envoi de la valeur : "));
                   Serial.print(CO2_send);
                   Serial.println(F(" ppm ###"));
                   lastTime = millis();
@@ -459,7 +480,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
                   ARsendNum = 0 ;
               }
               else {
-              Serial.println(" ... problem updating channel, http error code : " + String(result));
+              Serial.println("... problem updating channel, http error code : " + String(result));
               ARsend = false ;
               }
               return;
@@ -492,7 +513,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
               }
           }
           else {
-              Serial.println(F("Valeur non envoyée"));
+              Serial.println(F("Valeur non envoyée."));
               Serial.print(F("Plus connecté au WiFi "));
               if ( !ARsend ) { // reboot si non reconnexion au WiFi 2 fois de suite
                   Serial.println(F("... reboot dans 5s..."));
