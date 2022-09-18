@@ -1,4 +1,4 @@
-ï»¿# capteurCO2
+# capteurCO2
 
 
 Based on https://co2.rinolfi.ch/ , i modified the Arduino prog to accommodate both several residential WiFis and WPA2 enterprise professional WiFi with a proxy, and upload to Thingspeak.com via library API.
@@ -13,16 +13,16 @@ There are also a lot of debug lines via serial print...
 Also added mechanism :
 
 
-Â  Â  to avoid dropping value for too long when update on Thingspeak is invalid
-Â Â 
-Â  Â  to reconnect to wifi if connection lost
-Â Â 
-Â  Â  to reboot if nothing uploads more than 5 times
-Â Â 
-Â  Â  in residential Wifi sending subroutines, you can find both Thingspeak sending value with library or without
-Â  Â Â 
+    to avoid dropping value for too long when update on Thingspeak is invalid
+  
+    to reconnect to wifi if connection lost
+  
+    to reboot if nothing uploads more than 5 times
+  
+    in residential Wifi sending subroutines, you can find both Thingspeak sending value with library or without
+    
 https://github.com/mathworks/thingspeak-arduino
-Â Â 
+  
 Updated version with more include files more for simplicity and easily adapt to several detectors corresponding to different ThnigSpeak channels.
 
 
