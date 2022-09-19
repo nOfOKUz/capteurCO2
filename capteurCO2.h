@@ -12,7 +12,7 @@
 #include <esp_wpa2.h>
 #include <WiFiClient.h> 
 
-// #define TS_ENABLE_SSL    // for HTTP secure @ TS, see thingspeak-arduino @ github
+//#define TS_ENABLE_SSL    // for HTTP secure @ TS, see thingspeak-arduino @ github
 #include <ThingSpeak.h>
 #include "certificate.h" // contains root CA Certificates fro HTTPS
 #include "secret.h"      // contains all personal data in same directory
@@ -55,6 +55,8 @@ const char* ssid3     = SSID_RES3;
 const char* password3 = PWD_RES3;
 const char* ssid4     = SSID_RES4;
 const char* password4 = PWD_RES4;
+const char* ntp1      = NTP_RES1;
+const char* ntp2      = NTP_RES2;
 
 // Thingspeak user parameters
 const String host     = "api.thingspeak.com";        // "api.thingspeak.com" "3.213.58.187" "34.231.233.177"
@@ -75,13 +77,13 @@ bool ARsend = true;
 bool Pro = false;
 int ARsendNum = 0;
 
-/************************************************
+/***********************************************
            Définition des fonctions
  ***********************************************/
  
 // gestion de l'horloge pour la validation des certificats HTTPS
 void setClock() {
-  configTime(0, 0, "pool.ntp.org" , ntp_pro , "time.nist.gov" );
+  configTime(3600, 3600, ntp1 , ntp_pro , ntp2 ); // Paris time
 // void configTime(int timezone * 3600, int daylightOffset_sec * 3600, const char* server1, const char* server2, const char* server3)
   Serial.print(F("Waiting for NTP time sync : "));
   time_t nowSecs = time(nullptr);
@@ -94,11 +96,14 @@ void setClock() {
   Serial.println();
   struct tm timeinfo;
   gmtime_r(&nowSecs, &timeinfo);
-  Serial.print(F("Current time : "));
+  Serial.print(F("Current GMT time : "));
+  Serial.print(asctime(&timeinfo));
+  getLocalTime(&timeinfo);
+  Serial.print(F("Current LOC time : "));
   Serial.println(asctime(&timeinfo));
 }
 
-/**************************************************
+/***************************************************
    Code de gestion du capteur CO2 via ModBus
    inspiré de : https://github.com/SFeli/ESP32_S8
  ***************************************************/
@@ -220,7 +225,7 @@ void prepareEcran() {
   tft.setTextSize(8);
 }
 
-/************************************************
+/***********************************************
      ### nouvelles fonctions by nOfOkUz ###
  ***********************************************/
  
@@ -285,11 +290,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
          else {
              Serial.println(F("Valeur non envoyée via proxy"));
              Serial.print(F("Plus connecté au WiFi "));
-             if ( !ARsend ) {
-                  Serial.println(F("... reboot cause plus connecté au WiFi pro dans 5s..."));
-                  delay(5000);
-                  ESP.restart();
-                  }
+             ARsend = false ;
              WiFi.disconnect();
              WiFi.begin();
              Serial.println(F("... reconnexion au WiFi!"));
@@ -298,12 +299,19 @@ void Envoi_Valeur(unsigned long CO2_send) {
       }
       if( !Pro ) {
           if ((wifiMulti.run() == WL_CONNECTED)) {
+// check time before ClientSecure            
+              struct tm timeinfo;
+              // La config correspond aux changements d'heure du fuseau horaire Europe / Paris.
+              // configTzTime("CET-1CEST-2,M3.5.0/02:00:00,M10.5.0/03:00:00", ntp1, ntp2, ntp_pro );
+              getLocalTime(&timeinfo);
+              Serial.print(F("Current time before ClientSecure : "));
+              Serial.println(asctime(&timeinfo));
 //              WiFiClientSecure client;
 //              client.setCACert(rootCACertificate);
-              WiFiClient client;              
+              WiFiClient client;
              // with ThinkSpeak library
-              Serial.print(F("### Connexion web à ThingSpeak via library "));            
-              ThingSpeak.begin(client);  
+              Serial.print(F("### Connexion web à ThingSpeak via library "));        
+              ThingSpeak.begin(client);
               int result = ThingSpeak.writeField( ChanNum , FieldNum , long(CO2_send) , apiKey );
               Serial.print("... return code : " + String(result) );
               if (result == 200) {
@@ -364,7 +372,7 @@ void Envoi_Valeur(unsigned long CO2_send) {
           }
 }    
 
-/************************************************
+/***********************************************
                Initialisation
  ***********************************************/
  
@@ -553,7 +561,7 @@ void setup() {
 unsigned long ancienCO2 = 0;
 int seuil = 0;
 
-/************************************************
+/***********************************************
             Programme pricipale
  ***********************************************/
  
