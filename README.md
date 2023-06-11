@@ -36,7 +36,7 @@ Updated version with more include files more for simplicity and easily adapt to 
 
 	Improved classic display (Rinolfi's original still possible)
 
-	Include AirScore display from [nousaerons.fr](https://nousaerons.fr/)
+	Include AirScore display from https://nousaerons.fr
 
 	Possibility to alternate between AirScore and CO2 value
 
