@@ -1,6 +1,7 @@
 # capteurCO2
 
-
+2022 UPDATE
+ 
 Based on https://co2.rinolfi.ch/ , i modified the Arduino prog to accommodate both several residential WiFis and WPA2 enterprise professional WiFi with a proxy, and upload to Thingspeak.com via library API.
 
 
@@ -27,9 +28,26 @@ Also added mechanism :
     
 https://github.com/mathworks/thingspeak-arduino
 
-  
 Updated version with more include files more for simplicity and easily adapt to several detectors corresponding to different ThnigSpeak channels.
 
+2023 UPDATE
 
-NOTE also I cannot have the secure connection to ThingSpeak anymore since 19 July 2022, so I switched to non-secure connection (I left the secured code part as comments).
+	Add more subfiles for clarity
+
+	Improved classic display (Rinolfi's original still possible)
+
+	Include AirScore display from nousaerons.fr
+
+	Possibility to alternate between AirScore and CO2 value
+
+	Add time slot to turn off screen during night (for bedrooms)
+
+	Time slot also possible in off line mode if detector turn on at given time
+
+	When sreen off for night, press button displays temporary on instead of manuel calibration (still manual calibration when screen-on time).
+
+
+
+
+
 
