@@ -44,10 +44,4 @@ Updated version with more include files more for simplicity and easily adapt to 
 
 	Time slot also possible in off line mode if detector turn on at given time
 
-	When sreen off for night, press button displays temporary on instead of manuel calibration (still manual calibration when screen-on time).
-
-
-
-
-
-
+	When screen off for night, press button displays temporary on instead of manuel calibration (still manual calibration when screen-on time).
